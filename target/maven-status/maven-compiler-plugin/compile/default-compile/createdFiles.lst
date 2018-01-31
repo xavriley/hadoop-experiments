@@ -1,0 +1,5 @@
+com/mycompany/app/SimpleXML.class
+com/mycompany/app/AvgDriver.class
+com/mycompany/app/AvgMapper.class
+com/mycompany/app/App.class
+com/mycompany/app/AvgReducer.class
