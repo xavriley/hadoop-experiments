@@ -1,4 +1,4 @@
-StackOverflow wordcount example with Hadoop
+# StackOverflow wordcount example with Hadoop
 
 ```
 $ hdfs dfs -mkdir stackoverflow
@@ -28,10 +28,30 @@ anonymous	1
 ...
 ```
 
+## Maven setup
 
-## some errors
+Required packages were found here: https://hadoopi.wordpress.com/2013/05/25/setup-maven-project-for-hadoop-in-5mn/
+`pom.xml` statements for the correct version (2.6.3 as used on the bigdata server) were found here: https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common/2.6.3
+
+## Deploying an uberjar (fat jar) with the maven shade plugin
+
+I also received errors when running on the Hadoop cluster related to the `commons.text` library not being found. For the avoidance of doubt, I decided to bundle all dependencies into the jar using the shade plugin https://www.mkyong.com/maven/create-a-fat-jar-file-maven-shade-plugin/
+
+
+## Some of the errors I encountered whilst writing this
 
 ```
+# “ClassFormatError: Incompatible magic value” when trying to run Java jar file
+Compiling a jar with a local download of commons.text-1.2 resulted in this error, probably related to difference in the version of Java that was used to compile or some other problem relating to the compilation of the .jar file https://stackoverflow.com/questions/6797296/classformaterror-incompatible-magic-value-when-trying-to-run-java-jar-file
+
+# Exception in thread "main" java.lang.ClassNotFoundException
+This is because the path to the Driver class needs to be given the full namespace or path when passed to Hadoop
+Run `java -tf some.jar` to check the folder and give the path accordingly e.g. `com/mycompany/app/AvgDriver` not `AvgDriver`
+
+
+# The import org.apache.commons.lang3.StringEscapeUtils cannot be resolved
+The unescapeHtml method is now unescapeHtml4 from import org.apache.commons.text.StringEscapeUtils;
+
 # NullPointer Exception
 map.get("AboutMe") can return nulls
 
